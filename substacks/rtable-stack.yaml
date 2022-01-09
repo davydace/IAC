@@ -1,0 +1,67 @@
+AWSTemplateFormatVersion: "2010-09-09 
+Description: "Deploy a route table"
+
+Parameters: 
+	VpcId: 
+	Description: The id of the VPC deployed in VPC Stack 
+	Type: String
+
+PublicSubnet Id:
+	Description: The id of the public subnet deployed in Subnet Stack
+	Type: String
+
+Private SubnetId:
+	Description: The id of the private subnet deployed in Subnet Stack
+	Type: String
+
+InternetGateway:
+	Type: String 
+	Description: A reference to the IGW createed in IgwStack
+
+NatGateway:
+	Type: String
+	Description: A reference to the Nat Gateway
+
+Resources:
+  PublicRouteTable:
+		Type: AWS::EC2::RouteTable 
+		Properties: 
+			VpcId: !Ref VpcId 
+			Tags: 
+				- Key: Name
+				  Value: nested-public-subnet-rtable
+
+  DefaultPublicRoute:
+    Type: AWS::EC2::Route
+    DependsOn: InternetGatewayAttachment
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref InternetGateway
+
+  PublicSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet
+
+  PrivateRouteTable:
+    Type: "AWS::EC2::RouteTable"
+    Properties:
+        VpcId: !Ref VPC
+        Tags:
+          - Key: "Name"
+            Value: "Private Route Table"
+
+  DefaultPrivateRoute1:
+    Type: AWS::EC2::Route
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      DestinationCidrBlock: 0.0.0.0/0
+      NatGatewayId: !Ref NatGateway1
+  
+  PrivateSubnet1RouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    Properties:
+      RouteTableId: !Ref PrivateRouteTable
+      SubnetId: !Ref PrivateSubnet
