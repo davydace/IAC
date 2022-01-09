@@ -1,0 +1,28 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Deploy a VPC substack' 
+
+Parameters:
+  VpcName:
+    Type: String
+    Description: The name of the VPC
+
+  VpcCidr:
+    Description: The Cidrblock for the VPC
+    Type: String
+
+Resources:
+  Vpc: 
+  Type: AWS::EC2::VPC
+  Properties: 
+    CidrBlock: !Ref VpcCidr
+    EnableDnsHostnames: true
+    EnableDnsSupport: true
+    InstanceTenancy: default
+    Tags:
+      -Key: Name
+       Value: !Ref VpcName
+
+Outputs:
+  VpcId:
+    Value: !Ref Vpc
+    Description: A reference for the VPC

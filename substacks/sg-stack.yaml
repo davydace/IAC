@@ -1,0 +1,15 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Deploy a security group' 
+
+Parameters:
+  VpcId:
+    Description: A reference to the VPC creates a VP stack
+    Type: String
+
+Resources:
+  SecurityGroup:
+    Type: "AWS::EC2::SecurityGroup"
+    Properties:
+      GroupName: "no-ingress-sg"
+      GroupDescription: "Build a custom security group."
+      VpcId: !Ref VcpId

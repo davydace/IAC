@@ -1,0 +1,38 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: 'Deploy a subnet stack' 
+
+Parameters:
+  PublicSubnetCidr: 
+    Description: The CIDR block for the public subnet located in Availability Zone 1.
+    Type: String
+
+  PublicSubnetCidr:
+    Description: The CIDR block for the public subnet located in Availability Zone 2.
+    Type: String
+  
+  VpcId: 
+    Description: A reference to the VPC creates in VpcStack,
+    Type: String
+
+Resources:
+PublicSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:     
+      AvailabilityZone: !Select [ 0, !GetAZs '']
+      CidrBlock: !Ref PublicCidrBlock    
+      MapPublicIpOnLaunch: true      
+      Tags: 
+        - Key: Name
+          Value: public-subnet-substack
+      VpcId: !Ref VPC
+
+PrivateSubnet:
+    Type: AWS::EC2::Subnet
+    Properties:     
+      AvailabilityZone: !Select [ 0, !GetAZs '']
+      CidrBlock: !Ref PrivateCidrBlock    
+      MapPublicIpOnLaunch: true      
+      Tags: 
+        - Key: Name
+          Value: private-subnet-substack
+      VpcId: !Ref VPC

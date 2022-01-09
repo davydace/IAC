@@ -1,0 +1,30 @@
+AWSTemplateFormatVersion: "2010-09-69"
+Description: "Deploy an Internet Gateway"
+Parameters:
+# from lines 68 in main. yaml
+  VpcId:
+    Description: The CIDR block for the public subnet located in Availability Zone 1.
+    Type: String
+
+Resources:
+  InternetGateway:
+    Type: AWS::EC2: :InternetGateway
+    Properties:
+    Tags:
+      - Key: Name
+      Value: nested-igw
+
+InternetGatewayAttachment:
+  Type: AWS::EC2::VPCGatewayAttachment
+  Properties:
+    InternetGatewayId: !Ref InternetGateway 
+    VpcId: !Ref VpcId 
+
+Outputs:
+  InternetGateway:
+    Value: !Ref InternetGateway * from line 11
+    Description: A reference to the internet Gateway
+
+InternetGatewayAttachment:
+  Value: !Ref InternetGatewayAttachment # from line 18
+  Description: A reference to the Internet Gateway Attachment

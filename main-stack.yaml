@@ -1,0 +1,48 @@
+AWSTemplateFormatVersion: 2010-09-09 
+Description: "main stack"
+
+Parameters:
+ s3Bucket:
+  Default: template-bucket
+  Type: String
+  Description: s3 bucket name
+
+VpcCidr:
+  Type: String
+  Default: 10.0.0.0/16 
+  Description: vpc cidr block
+
+VpcName:
+  Type: String
+  Default: cf-templates-vpc
+
+PublicSubnetCidr:
+  Type: String
+  Default: 10.0.0.0/24
+  Description: public cidr block
+
+PrivateSubnetCidr:
+  Type: String
+  Default: 10.0.10.0/24
+  Description: private cidr block
+
+Resources:
+  VpcStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${s3Bucket).s3.amazonaws.com/vpc-stack.yaml
+      Parameters:
+        VpcCidr: ! Ref VpcCidr
+        VpcName: ! Ref VpcName
+
+  SubnetStack:
+    Type: AWS::CloudFormation::Stack
+      Properties:
+        TemplateURL: !Sub https://${s3Bucket).s3.amazonaws.com/subnet-stack.yaml
+        Parameters:
+          PublicSubnetCidr: !Ref PublicSubnetCidr
+          PrivateSubnetCidr: !Ref PrivateSubnetCidr
+          VpcId: !GetAtt VpcStack.Outputs.VpcId
+
+
+
