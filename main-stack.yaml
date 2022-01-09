@@ -30,7 +30,7 @@ Resources:
   VpcStack:
     Type: AWS::CloudFormation::Stack
     Properties:
-      TemplateURL: !Sub https://${s3Bucket).s3.amazonaws.com/vpc-stack.yaml
+      TemplateURL: !Sub https://${s3Bucket}.s3.amazonaws.com/vpc-stack.yaml
       Parameters:
         VpcCidr: ! Ref VpcCidr
         VpcName: ! Ref VpcName
@@ -38,7 +38,7 @@ Resources:
   SubnetStack:
     Type: AWS::CloudFormation::Stack
       Properties:
-        TemplateURL: !Sub https://${s3Bucket).s3.amazonaws.com/subnet-stack.yaml
+        TemplateURL: !Sub https://${s3Bucket}.s3.amazonaws.com/subnet-stack.yaml
         Parameters:
           PublicSubnetCidr: !Ref PublicSubnetCidr
           PrivateSubnetCidr: !Ref PrivateSubnetCidr
@@ -47,17 +47,32 @@ Resources:
   IgwStack:
     Type: AWS::CloudFormation::Stack
       Properties:
-        TemplateURL: !Sub https://${s3Bucket).s3.amazonaws.com/igw-stack.yaml
+        TemplateURL: !Sub https://${s3Bucket}.s3.amazonaws.com/igw-stack.yaml
         Parameters:          
           VpcId: !GetAtt VpcStack.Outputs.VpcId
 
   ngwStack:
     Type: AWS::CloudFormation::Stack
       Properties:
-        TemplateURL: !Sub https://${s3Bucket).s3.amazonaws.com/ngw-stack.yaml
+        TemplateURL: !Sub https://${s3Bucket}.s3.amazonaws.com/ngw-stack.yaml
         Parameters:          
           VpcId: !GetAtt SubnetStack.Outputs.PublicSubnetId
 
+  routetableStack:
+    Type: AWS::CloudFormation::Stack
+      Properties:
+        TemplateURL: !Sub https://${s3Bucket}.s3.amazonaws.com/rtable-stack.yaml
+        Parameters:          
+          VpcId: !GetAtt VpcStack.Outputs.VpcId
+          PublicSubnetId: !GetAtt SubnetStack.Outputs.PublicSubnetId
+          PrivateSubnetId: !GetAtt SubnetStack.Outputs.PrivateSubnetId
+          InternetGateway: !GetAtt ngwStack.Outputs.PrivateSubnetId
 
+   sgStack:
+    Type: AWS::CloudFormation::Stack
+      Properties:
+        TemplateURL: !Sub https://${s3Bucket}.s3.amazonaws.com/sg-stack.yaml
+        Parameters:         
+          VpcId: !GetAtt VpcStack.Outputs.VpcId
 
 

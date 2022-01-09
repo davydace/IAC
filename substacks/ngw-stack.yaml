@@ -1,0 +1,20 @@
+AWSTemplateFormatVersion: "2010-09-69"
+Description: "Deploy an Internet Gateway"
+Parameters:
+
+  VpcId:
+    Description: The CIDR block for the public subnet located in Availability Zone 1.
+    Type: String
+
+Resources:
+  NatGateway1:
+    Type: AWS::EC2::NatGateway
+    Properties:
+      AllocationId: !GetAtt NatGateway1EIP.AllocationId
+      SubnetId: !Ref PublicSubnet
+
+  NatGateway1EIP:
+      Type: AWS::EC2::EIP
+      DependsOn: InternetGatewayAttachment
+      Properties:
+        Domain: vpc

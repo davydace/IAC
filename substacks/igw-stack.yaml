@@ -1,7 +1,7 @@
 AWSTemplateFormatVersion: "2010-09-69"
 Description: "Deploy an Internet Gateway"
 Parameters:
-# from lines 68 in main. yaml
+
   VpcId:
     Description: The CIDR block for the public subnet located in Availability Zone 1.
     Type: String
