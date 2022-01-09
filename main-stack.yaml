@@ -44,5 +44,20 @@ Resources:
           PrivateSubnetCidr: !Ref PrivateSubnetCidr
           VpcId: !GetAtt VpcStack.Outputs.VpcId
 
+  IgwStack:
+    Type: AWS::CloudFormation::Stack
+      Properties:
+        TemplateURL: !Sub https://${s3Bucket).s3.amazonaws.com/igw-stack.yaml
+        Parameters:          
+          VpcId: !GetAtt VpcStack.Outputs.VpcId
+
+  ngwStack:
+    Type: AWS::CloudFormation::Stack
+      Properties:
+        TemplateURL: !Sub https://${s3Bucket).s3.amazonaws.com/ngw-stack.yaml
+        Parameters:          
+          VpcId: !GetAtt SubnetStack.Outputs.PublicSubnetId
+
+
 
 
