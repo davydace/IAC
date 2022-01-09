@@ -22,9 +22,9 @@ InternetGatewayAttachment:
 
 Outputs:
   InternetGateway:
-    Value: !Ref InternetGateway * from line 11
+    Value: !Ref InternetGateway 
     Description: A reference to the internet Gateway
 
 InternetGatewayAttachment:
-  Value: !Ref InternetGatewayAttachment # from line 18
+  Value: !Ref InternetGatewayAttachment 
   Description: A reference to the Internet Gateway Attachment
