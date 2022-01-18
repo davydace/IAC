@@ -1,0 +1,79 @@
+AWSTemplateFormatVersion: 2010-09-09 
+Description: "main stack"
+
+Parameters:
+  s3Bucket:
+    Default: template-bucket
+    Type: String
+    Description: s3 bucket name
+
+  VpcCidr:
+    Type: String
+    Default: 10.0.0.0/16 
+    Description: vpc cidr block
+
+  VpcName:
+    Type: String
+    Default: cf-templates-vpc
+
+  PublicSubnetCidr:
+    Type: String
+    Default: 10.0.0.0/24
+    Description: public cidr block
+
+  PrivateSubnetCidr:
+    Type: String
+    Default: 10.0.10.0/24
+    Description: private cidr block
+
+Resources:
+  VpcStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${s3Bucket}.s3.amazonaws.com/vpc-stack.yaml
+      Parameters:
+        VpcCidr: ! Ref VpcCidr
+        VpcName: ! Ref VpcName
+
+  SubnetStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${s3Bucket}.s3.amazonaws.com/subnet-stack.yaml
+      Parameters:
+        PublicSubnetCidr: !Ref PublicSubnetCidr
+        PrivateSubnetCidr: !Ref PrivateSubnetCidr
+        VpcId: !GetAtt VpcStack.Outputs.VpcId
+
+  IgwStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${s3Bucket}.s3.amazonaws.com/igw-stack.yaml
+      Parameters:          
+        VpcId: !GetAtt VpcStack.Outputs.VpcId
+
+  NgwStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${s3Bucket}.s3.amazonaws.com/ngw-stack.yaml
+      Parameters:          
+        PublicSubnetId: !GetAtt SubnetStack.Outputs.PublicSubnetId
+
+  RoutetableStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${s3Bucket}.s3.amazonaws.com/rtable-stack.yaml
+      Parameters:          
+        VpcId: !GetAtt VpcStack.Outputs.VpcId
+        PublicSubnetId: !GetAtt SubnetStack.Outputs.PublicSubnetId
+        PrivateSubnetId: !GetAtt SubnetStack.Outputs.PrivateSubnetId
+        InternetGateway: !GetAtt IgwStack.Outputs.PrivateSubnetId
+        NatGateway: !GetAtt NgwStack.Outputs.NatGateway
+
+   SgStack:
+    Type: AWS::CloudFormation::Stack
+    Properties:
+      TemplateURL: !Sub https://${s3Bucket}.s3.amazonaws.com/sg-stack.yaml
+      Parameters:         
+        VpcId: !GetAtt VpcStack.Outputs.VpcId
+
+

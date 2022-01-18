@@ -6,7 +6,7 @@ Parameters:
     Description: The CIDR block for the public subnet located in Availability Zone 1.
     Type: String
 
-  PublicSubnetCidr:
+  PrivateSubnetCidr:
     Description: The CIDR block for the public subnet located in Availability Zone 2.
     Type: String
   
@@ -19,20 +19,29 @@ PublicSubnet:
     Type: AWS::EC2::Subnet
     Properties:     
       AvailabilityZone: !Select [ 0, !GetAZs '']
-      CidrBlock: !Ref PublicCidrBlock    
+      CidrBlock: !Ref PublicSubnetCidr    
       MapPublicIpOnLaunch: true      
       Tags: 
         - Key: Name
           Value: public-subnet-substack
-      VpcId: !Ref VPC
+      VpcId: !Ref VpcId
 
 PrivateSubnet:
     Type: AWS::EC2::Subnet
     Properties:     
-      AvailabilityZone: !Select [ 0, !GetAZs '']
-      CidrBlock: !Ref PrivateCidrBlock    
+      AvailabilityZone: !Select [ 1, !GetAZs '']
+      CidrBlock: !Ref PrivateSubnetCidr    
       MapPublicIpOnLaunch: true      
       Tags: 
         - Key: Name
           Value: private-subnet-substack
-      VpcId: !Ref VPC
+      VpcId: !Ref VpcId
+
+Outputs:
+  PublicSubnetId:
+    Value: !Ref PublicSubnet 
+    Description: The id of the public subnet
+
+  PrivateSubnetId:
+    Value: !Ref PrivateSubnet 
+    Description: The id of the public subnet

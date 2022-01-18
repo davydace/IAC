@@ -6,11 +6,11 @@ Parameters:
 	Description: The id of the VPC deployed in VPC Stack 
 	Type: String
 
-PublicSubnet Id:
+PublicSubnetId:
 	Description: The id of the public subnet deployed in Subnet Stack
 	Type: String
 
-Private SubnetId:
+PrivateSubnetId:
 	Description: The id of the private subnet deployed in Subnet Stack
 	Type: String
 
@@ -43,25 +43,25 @@ Resources:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId: !Ref PublicRouteTable
-      SubnetId: !Ref PublicSubnet
+      SubnetId: !Ref PublicSubnetId
 
   PrivateRouteTable:
     Type: "AWS::EC2::RouteTable"
     Properties:
-        VpcId: !Ref VPC
+        VpcId: !Ref VpcId
         Tags:
-          - Key: "Name"
-            Value: "Private Route Table"
+          - Key: Name
+            Value: nested-private-subnet-rtable
 
   DefaultPrivateRoute1:
     Type: AWS::EC2::Route
     Properties:
       RouteTableId: !Ref PrivateRouteTable
       DestinationCidrBlock: 0.0.0.0/0
-      NatGatewayId: !Ref NatGateway1
+      NatGatewayId: !Ref NatGateway
   
   PrivateSubnet1RouteTableAssociation:
     Type: AWS::EC2::SubnetRouteTableAssociation
     Properties:
       RouteTableId: !Ref PrivateRouteTable
-      SubnetId: !Ref PrivateSubnet
+      SubnetId: !Ref PrivateSubnetId

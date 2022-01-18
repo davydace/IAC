@@ -3,7 +3,7 @@ Description: 'Deploy a security group'
 
 Parameters:
   VpcId:
-    Description: A reference to the VPC creates a VP stack
+    Description: A reference to the VPC creates a VPC stack
     Type: String
 
 Resources:

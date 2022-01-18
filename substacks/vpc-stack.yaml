@@ -12,15 +12,15 @@ Parameters:
 
 Resources:
   Vpc: 
-  Type: AWS::EC2::VPC
-  Properties: 
-    CidrBlock: !Ref VpcCidr
-    EnableDnsHostnames: true
-    EnableDnsSupport: true
-    InstanceTenancy: default
-    Tags:
-      -Key: Name
-       Value: !Ref VpcName
+    Type: AWS::EC2::VPC
+    Properties: 
+      CidrBlock: !Ref VpcCidr
+      EnableDnsHostnames: true
+      EnableDnsSupport: true
+      InstanceTenancy: default
+      Tags:
+        -Key: Name
+        Value: !Ref VpcName
 
 Outputs:
   VpcId:
